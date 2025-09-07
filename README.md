@@ -26,4 +26,4 @@ dynamic adaptation to energy demands with unprecedented safety and efficiency.
 - 🇪🇺 EU, 🇯🇵 Japan, 🇷🇺 Russia, 🇨🇭 Switzerland – diverse specialised contributions  
 
 ## Live Demo
-🔗 [Adaptive AI-ML Control Framework](https://devloper-gazi.github.io/Control-Loop-System-in-Nuclear-Systems/)
+🔗 [Autonomous System Optimisation](https://devloper-gazi.github.io/Control-Loop-System-in-Nuclear-Systems/)
