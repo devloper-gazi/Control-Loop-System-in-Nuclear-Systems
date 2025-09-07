@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous System Optimisation in Advanced Nuclear Reactors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Neutral Academia -->
+    <!-- Application Structure Plan: A single-page, vertical scrolling layout with a sticky top navigation for smooth scrolling between thematic sections. This structure was chosen to guide the user from high-level concepts (Introduction) to deep technical details (Control Loop, Algorithms) and then to practical application (Interactive Simulation) and global context (Comparative Analysis). This non-linear but guided flow allows both quick overviews and deep dives, enhancing user exploration of a complex topic without overwhelming them. -->
+    <!-- Visualization & Content Choices: 1. Core Concepts -> Inform -> HTML/CSS Diagram -> No interaction -> Simple, dependency-free visualization for the main feedback loop. 2. Control System -> Explore Change -> Chart.js Line Chart -> Sliders for demand/temp adjust chart -> Demonstrates the system's dynamic response, making it tangible. 3. Global Comparison -> Compare -> Chart.js Bar Chart -> Tab clicks update text content -> Provides an immediate visual comparison of national efforts, supporting the textual analysis. All charts are Canvas-based. Technical formulas and pseudo-code are presented in styled HTML pre/code blocks for clarity. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4;
+            color: #292524;
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0c4a6e;
+            border-bottom-color: #0c4a6e;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+        .formula {
+            background-color: #e7e5e4;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Times New Roman', serif;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #292524;
+        }
+        .tab-btn {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .tab-btn.active {
+            background-color: #0c4a6e;
+            color: #ffffff;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-md">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-slate-800">The Thorium Age</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div id="nav-links" class="ml-10 flex items-baseline space-x-4">
+                        <a href="#introduction" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Introduction</a>
+                        <a href="#control-loop" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Control Loop</a>
+                        <a href="#simulation" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Simulation</a>
+                        <a href="#reconfiguration" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Reconfiguration</a>
+                        <a href="#global-landscape" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Global Landscape</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+
+        <section id="introduction" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-base font-semibold text-sky-800 tracking-wide uppercase">Smart Nuclear Energy</h2>
+                <p class="mt-2 text-4xl font-extrabold text-slate-900 tracking-tight sm:text-5xl">Autonomous System Optimisation</p>
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600">Exploring the machine learning-driven future of nuclear reactor control, enabling dynamic adaptation to energy demands with unprecedented safety and efficiency.</p>
+            </div>
+
+            <div class="card p-8">
+                 <p class="text-lg text-slate-700 mb-6">At the heart of next-generation nuclear systems, such as Thorium-based Molten Salt Reactors (MSRs), lies the principle of autonomous operation. This paradigm shift replaces static, human-supervised control with intelligent, self-adjusting systems. Machine learning (ML) algorithms form a continuous feedback loop that optimises reactor performance in real-time. This application provides an overview of the core components, underlying principles, and global research landscape of this transformative technology.</p>
+                
+                <h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">The Core Autonomous Control Loop</h3>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-center">
+                    <div class="p-4 bg-sky-100 rounded-lg w-full md:w-1/4">
+                        <div class="text-5xl mb-2">📡</div>
+                        <h4 class="font-bold text-sky-900">1. SENSE</h4>
+                        <p class="text-sm text-sky-800">Collect real-time data from thousands of sensors (temperature, pressure, neutron flux, etc.).</p>
+                    </div>
+                    <div class="font-bold text-2xl text-slate-500 transform rotate-90 md:rotate-0">→</div>
+                    <div class="p-4 bg-amber-100 rounded-lg w-full md:w-1/4">
+                        <div class="text-5xl mb-2">🧠</div>
+                        <h4 class="font-bold text-amber-900">2. DECIDE</h4>
+                        <p class="text-sm text-amber-800">ML models analyse data, predict future states, and determine optimal adjustments.</p>
+                    </div>
+                    <div class="font-bold text-2xl text-slate-500 transform rotate-90 md:rotate-0">→</div>
+                    <div class="p-4 bg-emerald-100 rounded-lg w-full md:w-1/4">
+                        <div class="text-5xl mb-2">⚙️</div>
+                        <h4 class="font-bold text-emerald-900">3. ACT</h4>
+                        <p class="text-sm text-emerald-800">Control systems execute decisions (adjust control rods, coolant flow, power distribution).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="control-loop" class="mb-24 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Deep Dive: The ML Control Loop</h2>
+            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">The control loop is not a monolithic entity but a collection of specialised algorithms and physical principles working in concert. Below, we examine the foundational mathematical models and the algorithmic logic that enable autonomous decision-making.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4 text-slate-800">Core Physics: Point Kinetics Equation</h3>
+                    <p class="mb-4 text-slate-600">The behaviour of neutron population (and thus power) in a reactor can be approximated by the point kinetics equations. This is a foundational model that any control algorithm must respect.</p>
+                    <div class="formula">
+                        dP(t)/dt = [ (ρ(t) - β) / Λ ] * P(t) + ΣλᵢCᵢ(t)
+                    </div>
+                    <ul class="mt-4 text-sm text-slate-500 space-y-1">
+                        <li><b>P(t)</b>: Reactor power at time t</li>
+                        <li><b>ρ(t)</b>: Reactivity (control input)</li>
+                        <li><b>β</b>: Delayed neutron fraction</li>
+                        <li><b>Λ</b>: Prompt neutron generation time</li>
+                        <li><b>λᵢCᵢ(t)</b>: Contribution from delayed neutron precursors</li>
+                    </ul>
+                </div>
+
+                <div class="card p-6">
+                    <h3 class="text-xl font-bold mb-4 text-slate-800">Algorithm: Predictive Control Model</h3>
+                    <p class="mb-4 text-slate-600">A Model Predictive Control (MPC) algorithm uses a model of the system (like the point kinetics equation) to predict future states and select a control action that minimises a cost function over a time horizon.</p>
+                    <div class="code-block">
+<pre>
+function calculate_optimal_control(state, demand):
+  // Define prediction horizon (e.g., 60 seconds)
+  horizon = 60 
+  
+  // Define cost function (penalise deviation from demand
+  // and rapid control changes)
+  cost_function = (predicted_power - demand)^2 + (control_action)^2
+  
+  // Simulate multiple control action sequences
+  for each sequence in possible_sequences:
+    predicted_states = predict_future(state, sequence, horizon)
+    costs.append(calculate_cost(predicted_states, cost_function))
+    
+  // Select sequence with the minimum cost
+  optimal_sequence = find_min(costs)
+  
+  // Return the first action of the best sequence
+  return optimal_sequence[0]
+</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="simulation" class="mb-24 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Interactive Control Simulation</h2>
+            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">This simplified simulation demonstrates how the autonomous system responds to changing energy demands while maintaining operational stability. Adjust the sliders to see the ML controller adapt the reactor's power output and control rod position in real-time. The goal is to match the power output (blue line) to the power demand (red line) smoothly and efficiently.</p>
+            
+            <div class="card p-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="text-center">
+                        <label for="powerDemand" class="block text-sm font-medium text-slate-700">Power Demand (%)</label>
+                        <input id="powerDemand" type="range" min="20" max="100" value="50" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                        <span id="powerDemandValue" class="text-lg font-bold text-sky-800">50%</span>
+                    </div>
+                    <div class="text-center">
+                        <div class="block text-sm font-medium text-slate-700">System Stability</div>
+                        <div id="stabilityIndicator" class="mt-2 text-lg font-bold text-emerald-600">STABLE</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="block text-sm font-medium text-slate-700">Control Rod Position</div>
+                        <div id="rodPosition" class="mt-2 text-lg font-bold text-slate-800">50.0%</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="reactorChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="reconfiguration" class="mb-24 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Dynamic Reconfiguration & Updates</h2>
+            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">An autonomous system must also be capable of self-maintenance and improvement. This involves robust protocols for deploying software and firmware updates without compromising safety or operational continuity. The "Digital Twin" concept is paramount to this process.</p>
+            
+            <div class="card p-8">
+                <h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">The Digital Twin Validation Protocol</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div class="flex flex-col items-center">
+                        <div class="w-full p-4 border-2 border-dashed border-slate-300 rounded-lg">
+                            <div class="text-4xl">📦</div>
+                            <h4 class="font-bold text-slate-700 mt-2">1. New Update Package</h4>
+                            <p class="text-sm text-slate-500">A new control algorithm or security patch is developed and packaged.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center font-bold text-3xl text-slate-400">→</div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-full p-4 border-2 border-dashed border-sky-400 bg-sky-50 rounded-lg">
+                            <div class="text-4xl">🖥️</div>
+                            <h4 class="font-bold text-sky-800 mt-2">2. Digital Twin Simulation</h4>
+                            <p class="text-sm text-sky-700">The update is deployed to a high-fidelity virtual replica of the reactor. It undergoes thousands of simulated operational cycles and fault scenarios.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="flex justify-center my-4">
+                    <div class="font-bold text-3xl text-slate-400 transform rotate-90">↓</div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 md:grid-cols-offset-2 gap-4 text-center">
+                     <div class="flex flex-col items-center md:col-start-2">
+                        <div class="w-full p-4 border-2 border-dashed border-emerald-400 bg-emerald-50 rounded-lg">
+                            <div class="text-4xl">💡</div>
+                            <h4 class="font-bold text-emerald-800 mt-2">3. Autonomous Deployment</h4>
+                            <p class="text-sm text-emerald-700">If all simulations pass, the validated update is automatically deployed to the physical reactor during a low-demand period.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="global-landscape" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Global Landscape & Comparative Analysis</h2>
+            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">Research into autonomous nuclear control is a global endeavour, with different nations focusing on distinct aspects of the technology, driven by national energy policies, research funding, and regulatory environments. This section provides a comparative overview of key players.</p>
+            
+            <div class="card p-8">
+                <div class="mb-8">
+                    <div id="country-tabs" class="flex flex-wrap justify-center border-b border-slate-200">
+                        <button data-country="uk" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">United Kingdom</button>
+                        <button data-country="us" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">United States</button>
+                        <button data-country="china" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">China</button>
+                        <button data-country="russia" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Russia</button>
+                        <button data-country="israel" class="tab-btn active px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Israel</button>
+                        <button data-country="japan" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Japan</button>
+                        <button data-country="switzerland" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Switzerland</button>
+                        <button data-country="eu" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">European Union</button>
+                        <button data-country="others" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Others</button>
+                    </div>
+                    <div id="country-content" class="mt-6">
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold text-slate-800 mb-4 text-center">Comparative Research Focus</h3>
+                <p class="text-sm text-slate-600 text-center mb-4">Each bar represents a country, with its total height showing its overall research effort and the segments showing the relative focus on specific areas. Click on the country tabs above for more details.</p>
+                <div class="chart-container">
+                    <canvas id="researchFocusChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.5
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+    const countryData = {
+        uk: {
+            title: "United Kingdom",
+            content: "Focuses heavily on regulatory framework development and safety assurance for AI in nuclear. The Office for Nuclear Regulation (ONR) and institutions like the University of Manchester are leading research into 'explainable AI' (XAI) to ensure that autonomous decisions can be audited and understood. Strong emphasis on integrating AI into Small Modular Reactors (SMRs) and future fusion projects.",
+        },
+        us: {
+            title: "United States",
+            content: "Driven by the Department of Energy (DOE) and its national labs (e.g., Argonne, Oak Ridge). Research is broad, covering everything from advanced sensor development and data fusion to reinforcement learning for operational efficiency. Significant public-private partnerships aim to develop and commercialize advanced reactor designs with inherent autonomous capabilities.",
+        },
+        china: {
+            title: "China",
+            content: "Rapidly advancing in both theoretical research and practical implementation, particularly with their operational Thorium Molten Salt Reactor (TMSR-LF1). China's strategy involves leveraging vast computational resources to build highly complex digital twins and AI controllers. Their state-driven approach allows for rapid iteration and deployment of these technologies in new reactor builds.",
+        },
+        russia: {
+            title: "Russia",
+            content: "Rosatom is leading efforts to integrate AI and predictive analytics into its existing VVER reactor fleet for life extension and efficiency improvements. Their research focus is pragmatic, aiming at optimising fuel cycles and predictive maintenance to reduce operational costs. There is also significant research in control systems for nuclear-powered icebreakers and floating power plants.",
+        },
+        israel: {
+            title: "Israel",
+            content: "Leveraging its significant expertise in cybersecurity and national security, Israel's research focuses on fortifying autonomous control systems against cyber threats. Key areas include developing advanced intrusion detection systems, ensuring the integrity of AI models and data streams, and creating resilient, self-healing network architectures. This is critical for protecting the future of nuclear infrastructure from sophisticated state-level attacks.",
+        },
+        japan: {
+            title: "Japan",
+            content: "Japan is heavily focused on AI for robotics in decommissioning and waste management, with spillover research into operational safety. Institutions like the Japan Atomic Energy Agency (JAEA) are developing sophisticated autonomous robots to handle hazardous tasks in legacy facilities, with the control logic and safety protocols influencing new reactor designs.",
+        },
+        switzerland: {
+            title: "Switzerland",
+            content: "Switzerland, with its strong background in high-assurance software (e.g., CERN), contributes to the verification and validation of control software for critical systems. Research is concentrated on formal methods, a crucial component of autonomous reactor management that ensures software correctness and reliability through mathematical proofs.",
+        },
+        eu: {
+            title: "European Union",
+            content: "A collaborative effort across multiple member states, often funded through Horizon Europe. Research is diverse, with France (CEA) focusing on simulation and modelling, Germany on safety and reliability analysis, and others on materials science and sensor technology. There is a strong emphasis on establishing common standards and safety protocols for AI in critical infrastructure.",
+        },
+        others: {
+            title: "Other Nations",
+            content: "Other nations and private firms are contributing to various aspects of the technology, including materials science for advanced sensors and the development of specialized algorithms for thermal hydraulics and fuel management. These efforts, while smaller in scale, contribute to the global knowledge base.",
+        }
+    };
+
+    const countryTabs = document.getElementById('country-tabs');
+    const countryContent = document.getElementById('country-content');
+
+    function updateCountryContent(country) {
+        const data = countryData[country];
+        countryContent.innerHTML = `
+            <h4 class="text-xl font-bold text-slate-900">${data.title}</h4>
+            <p class="mt-2 text-slate-600">${data.content}</p>
+        `;
+        countryTabs.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        countryTabs.querySelector(`[data-country="${country}"]`).classList.add('active');
+    }
+
+    countryTabs.addEventListener('click', (e) => {
+        if (e.target.matches('.tab-btn')) {
+            const country = e.target.dataset.country;
+            updateCountryContent(country);
+        }
+    });
+
+    updateCountryContent('israel');
+
+    const researchFocusData = {
+        labels: ['UK', 'US', 'China', 'Russia', 'Israel', 'Japan', 'Switzerland', 'EU', 'Others'],
+        datasets: [{
+            label: 'Safety & Regulation',
+            data: [9, 7, 6, 5, 4, 8, 9, 8, 5],
+            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        }, {
+            label: 'Efficiency & Optimisation',
+            data: [6, 8, 9, 8, 5, 4, 6, 7, 7],
+            backgroundColor: 'rgba(255, 159, 64, 0.7)',
+        }, {
+            label: 'New Reactor Design',
+            data: [5, 8, 9, 6, 4, 3, 4, 6, 5],
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+        }, {
+            label: 'Cybersecurity & Resilience',
+            data: [7, 6, 5, 4, 9, 5, 7, 6, 6],
+            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+        }]
+    };
+    
+    const researchCtx = document.getElementById('researchFocusChart').getContext('2d');
+    new Chart(researchCtx, {
+        type: 'bar',
+        data: researchFocusData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.raw} (Relative Focus)`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Relative Research Focus (Arbitrary Units)'
+                    }
+                }
+            }
+        }
+    });
+
+    const reactorCtx = document.getElementById('reactorChart').getContext('2d');
+    let reactorChart;
+    const timeLabels = Array.from({ length: 60 }, (_, i) => i + 1);
+    let powerOutputData = Array(60).fill(50);
+    let powerDemandData = Array(60).fill(50);
+    
+    const powerDemandSlider = document.getElementById('powerDemand');
+    const powerDemandValue = document.getElementById('powerDemandValue');
+    const stabilityIndicator = document.getElementById('stabilityIndicator');
+    const rodPosition = document.getElementById('rodPosition');
+
+    function createReactorChart() {
+        reactorChart = new Chart(reactorCtx, {
+            type: 'line',
+            data: {
+                labels: timeLabels,
+                datasets: [{
+                    label: 'Power Output',
+                    data: powerOutputData,
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                }, {
+                    label: 'Power Demand',
+                    data: powerDemandData,
+                    borderColor: 'rgb(239, 68, 68)',
+                    borderDash: [5, 5],
+                    backgroundColor: 'transparent',
+                    fill: false,
+                    pointRadius: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 120,
+                        title: {
+                            display: true,
+                            text: 'Power (%)'
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: { enabled: false }
+                }
+            }
+        });
+    }
+    
+    createReactorChart();
+    
+    let currentPower = 50;
+    let currentRodPosition = 50;
+    let integralError = 0;
+    const Kp = 0.4; // Proportional gain
+    const Ki = 0.02; // Integral gain
+    const Kd = 1.5; // Derivative gain
+    let lastError = 0;
+    
+    function updateSimulation() {
+        const demand = parseFloat(powerDemandSlider.value);
+        powerDemandValue.textContent = `${demand.toFixed(0)}%`;
+
+        powerDemandData.shift();
+        powerDemandData.push(demand);
+
+        const error = demand - currentPower;
+        integralError += error;
+        const derivativeError = error - lastError;
+
+        const controlSignal = Kp * error + Ki * integralError + Kd * derivativeError;
+        
+        currentRodPosition -= controlSignal * 0.1; // Inverted logic for rods
+        currentRodPosition = Math.max(0, Math.min(100, currentRodPosition));
+        
+        rodPosition.textContent = `${currentRodPosition.toFixed(1)}%`;
+        
+        const powerChange = (100 - currentRodPosition - currentPower) * 0.1; // Simplified reactor physics
+        currentPower += powerChange;
+        
+        powerOutputData.shift();
+        powerOutputData.push(currentPower);
+        
+        lastError = error;
+
+        if (Math.abs(error) < 5 && Math.abs(derivativeError) < 0.5) {
+            stabilityIndicator.textContent = 'STABLE';
+            stabilityIndicator.className = 'mt-2 text-lg font-bold text-emerald-600';
+        } else if (Math.abs(error) < 15) {
+            stabilityIndicator.textContent = 'ADJUSTING';
+            stabilityIndicator.className = 'mt-2 text-lg font-bold text-amber-600';
+        } else {
+            stabilityIndicator.textContent = 'TRANSIENT';
+            stabilityIndicator.className = 'mt-2 text-lg font-bold text-red-600';
+        }
+        
+        reactorChart.update();
+    }
+    
+    setInterval(updateSimulation, 200);
+
+});
+</script>
+</body>
+</html>
