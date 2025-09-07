@@ -11,108 +11,59 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Neutral Academia -->
+    <!-- Application Structure Plan: A single-page, vertical scrolling layout with a sticky top navigation for smooth scrolling between thematic sections. This structure was chosen to guide the user from high-level concepts (Introduction) to deep technical details (Control Loop, Algorithms) and then to practical application (Interactive Simulation) and global context (Comparative Analysis). This non-linear but guided flow allows both quick overviews and deep dives, enhancing user exploration of a complex topic without overwhelming them. -->
+    <!-- Visualization & Content Choices: 1. Core Concepts -> Inform -> HTML/CSS Diagram -> No interaction -> Simple, dependency-free visualization for the main feedback loop. 2. Control System -> Explore Change -> Chart.js Line Chart -> Sliders for demand/temp adjust chart -> Demonstrates the system's dynamic response, making it tangible. 3. Global Comparison -> Compare -> Chart.js Bar Chart -> Tab clicks update text content -> Provides an immediate visual comparison of national efforts, supporting the textual analysis. All charts are Canvas-based. Technical formulas and pseudo-code are presented in styled HTML pre/code blocks for clarity. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        :root {
-            --bg-primary: #f5f5f4;
-            --bg-secondary: #ffffff;
-            --bg-header: rgba(255, 255, 255, 0.8);
-            --text-primary: #292524;
-            --text-secondary: #475569;
-            --text-tertiary: #64748b;
-            --border-color: #e2e8f0;
-            --shadow-color: rgba(0, 0, 0, 0.1);
-            --code-bg: #1f2937;
-            --code-text: #d1d5db;
-            --formula-bg: #e7e5e4;
-            --formula-text: #292524;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-header: rgba(15, 23, 42, 0.9);
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-tertiary: #94a3b8;
-            --border-color: #334155;
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --code-bg: #0f172a;
-            --code-text: #e2e8f0;
-            --formula-bg: #1e293b;
-            --formula-text: #f1f5f9;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: #f5f5f4;
+            color: #292524;
         }
-
         .nav-link {
             transition: color 0.3s ease, border-color 0.3s ease;
             border-bottom: 2px solid transparent;
-            color: var(--text-secondary);
         }
-
         .nav-link:hover, .nav-link.active {
             color: #0c4a6e;
             border-bottom-color: #0c4a6e;
         }
-
-        [data-theme="dark"] .nav-link:hover, [data-theme="dark"] .nav-link.active {
-            color: #38bdf8;
-            border-bottom-color: #38bdf8;
-        }
-
         .card {
-            background-color: var(--bg-secondary);
+            background-color: #ffffff;
             border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
-
         .code-block {
-            background-color: var(--code-bg);
-            color: var(--code-text);
+            background-color: #1f2937;
+            color: #d1d5db;
             border-radius: 0.5rem;
             padding: 1rem;
             font-family: 'Courier New', Courier, monospace;
             font-size: 0.875rem;
             overflow-x: auto;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
-
         .formula {
-            background-color: var(--formula-bg);
-            color: var(--formula-text);
+            background-color: #e7e5e4;
             padding: 1rem;
             border-radius: 0.5rem;
             font-family: 'Times New Roman', serif;
             text-align: center;
             font-size: 1.1rem;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            color: #292524;
         }
-
         .tab-btn {
             transition: background-color 0.3s ease, color 0.3s ease;
-            color: var(--text-secondary);
         }
-
         .tab-btn.active {
             background-color: #0c4a6e;
             color: #ffffff;
         }
-
-        [data-theme="dark"] .tab-btn.active {
-            background-color: #0284c7;
-        }
-
         .chart-container {
             position: relative;
             width: 100%;
@@ -122,160 +73,28 @@
             height: 350px;
             max-height: 400px;
         }
-
         @media (min-width: 768px) {
             .chart-container {
                 height: 400px;
             }
         }
-
-        /* Theme Toggle Styles */
-        .theme-toggle {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background-color: #e2e8f0;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        [data-theme="dark"] .theme-toggle {
-            background-color: #334155;
-        }
-
-        .theme-toggle-slider {
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background-color: #fbbf24;
-            border-radius: 50%;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        [data-theme="dark"] .theme-toggle-slider {
-            transform: translateX(30px);
-            background-color: #6366f1;
-        }
-
-        .theme-icon {
-            font-size: 14px;
-        }
-
-        /* Color scheme adjustments for dark mode */
-        [data-theme="dark"] .bg-sky-100 {
-            background-color: #0c4a6e;
-        }
-
-        [data-theme="dark"] .bg-amber-100 {
-            background-color: #78350f;
-        }
-
-        [data-theme="dark"] .bg-emerald-100 {
-            background-color: #064e3b;
-        }
-
-        [data-theme="dark"] .text-sky-800, 
-        [data-theme="dark"] .text-sky-900 {
-            color: #7dd3fc;
-        }
-
-        [data-theme="dark"] .text-amber-800,
-        [data-theme="dark"] .text-amber-900 {
-            color: #fcd34d;
-        }
-
-        [data-theme="dark"] .text-emerald-800,
-        [data-theme="dark"] .text-emerald-900 {
-            color: #6ee7b7;
-        }
-
-        [data-theme="dark"] .bg-sky-50 {
-            background-color: #082f49;
-        }
-
-        [data-theme="dark"] .bg-emerald-50 {
-            background-color: #022c22;
-        }
-
-        [data-theme="dark"] .border-slate-200 {
-            border-color: var(--border-color);
-        }
-
-        [data-theme="dark"] .border-slate-300 {
-            border-color: #475569;
-        }
-
-        [data-theme="dark"] .border-sky-400 {
-            border-color: #0284c7;
-        }
-
-        [data-theme="dark"] .border-emerald-400 {
-            border-color: #10b981;
-        }
-
-        /* Text color adjustments */
-        .text-slate-900, .text-slate-800, .text-slate-700 {
-            color: var(--text-primary);
-        }
-
-        .text-slate-600, .text-slate-500 {
-            color: var(--text-secondary);
-        }
-
-        .text-sky-800 {
-            color: #075985;
-        }
-
-        [data-theme="dark"] .text-sky-800 {
-            color: #38bdf8;
-        }
-
-        /* Header background */
-        .header-bg {
-            background-color: var(--bg-header);
-            backdrop-filter: blur(12px);
-        }
-
-        /* Input range styling for dark mode */
-        [data-theme="dark"] input[type="range"] {
-            background-color: #334155;
-        }
-
-        [data-theme="dark"] input[type="range"]::-webkit-slider-thumb {
-            background-color: #38bdf8;
-        }
-
-        [data-theme="dark"] input[type="range"]::-moz-range-thumb {
-            background-color: #38bdf8;
-        }
     </style>
 </head>
-<body class="antialiased" data-theme="light">
+<body class="antialiased">
 
-    <header class="header-bg sticky top-0 z-50 shadow-md">
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-md">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold">The Thorium Age</h1>
+                    <h1 class="text-xl font-bold text-slate-800">The Thorium Age</h1>
                 </div>
-                <div class="hidden md:flex items-center space-x-6">
-                    <div id="nav-links" class="flex items-baseline space-x-4">
-                        <a href="#introduction" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Introduction</a>
-                        <a href="#control-loop" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Control Loop</a>
-                        <a href="#simulation" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Simulation</a>
-                        <a href="#reconfiguration" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Reconfiguration</a>
-                        <a href="#global-landscape" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Global Landscape</a>
-                    </div>
-                    <div class="theme-toggle" id="themeToggle">
-                        <div class="theme-toggle-slider">
-                            <span class="theme-icon">☀️</span>
-                        </div>
+                <div class="hidden md:block">
+                    <div id="nav-links" class="ml-10 flex items-baseline space-x-4">
+                        <a href="#introduction" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Introduction</a>
+                        <a href="#control-loop" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Control Loop</a>
+                        <a href="#simulation" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Simulation</a>
+                        <a href="#reconfiguration" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Reconfiguration</a>
+                        <a href="#global-landscape" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Global Landscape</a>
                     </div>
                 </div>
             </div>
@@ -437,15 +256,15 @@ function calculate_optimal_control(state, demand):
             <div class="card p-8">
                 <div class="mb-8">
                     <div id="country-tabs" class="flex flex-wrap justify-center border-b border-slate-200">
-                        <button data-country="uk" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">United Kingdom</button>
-                        <button data-country="us" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">United States</button>
-                        <button data-country="china" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">China</button>
-                        <button data-country="russia" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Russia</button>
-                        <button data-country="israel" class="tab-btn active px-4 py-2 text-sm font-medium rounded-t-lg">Israel</button>
-                        <button data-country="japan" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Japan</button>
-                        <button data-country="switzerland" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Switzerland</button>
-                        <button data-country="eu" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">European Union</button>
-                        <button data-country="others" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Others</button>
+                        <button data-country="uk" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">United Kingdom</button>
+                        <button data-country="us" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">United States</button>
+                        <button data-country="china" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">China</button>
+                        <button data-country="russia" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Russia</button>
+                        <button data-country="israel" class="tab-btn active px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Israel</button>
+                        <button data-country="japan" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Japan</button>
+                        <button data-country="switzerland" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Switzerland</button>
+                        <button data-country="eu" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">European Union</button>
+                        <button data-country="others" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Others</button>
                     </div>
                     <div id="country-content" class="mt-6">
                     </div>
@@ -464,29 +283,6 @@ function calculate_optimal_control(state, demand):
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    const themeIcon = themeToggle.querySelector('.theme-icon');
-    
-    // Store theme preference in memory (resets on page reload)
-    let currentTheme = 'light';
-    
-    function setTheme(theme) {
-        currentTheme = theme;
-        body.setAttribute('data-theme', theme);
-        themeIcon.textContent = theme === 'light' ? '☀️' : '🌙';
-        
-        // Update chart colors based on theme
-        updateChartTheme();
-    }
-    
-    themeToggle.addEventListener('click', () => {
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-    });
-
-    // Navigation observer
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('.nav-link');
 
@@ -514,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(section);
     });
 
-    // Country data
     const countryData = {
         uk: {
             title: "United Kingdom",
@@ -578,106 +373,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateCountryContent('israel');
 
-    // Chart configuration
-    const getChartColors = () => {
-        const isDark = currentTheme === 'dark';
-        return {
-            gridColor: isDark ? 'rgba(148, 163, 184, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-            textColor: isDark ? '#cbd5e1' : '#475569',
-            datasets: {
-                safety: isDark ? 'rgba(96, 165, 250, 0.7)' : 'rgba(54, 162, 235, 0.7)',
-                efficiency: isDark ? 'rgba(251, 191, 36, 0.7)' : 'rgba(255, 159, 64, 0.7)',
-                newReactor: isDark ? 'rgba(110, 231, 183, 0.7)' : 'rgba(75, 192, 192, 0.7)',
-                cybersecurity: isDark ? 'rgba(248, 113, 113, 0.7)' : 'rgba(255, 99, 132, 0.7)',
-                powerOutput: isDark ? 'rgb(96, 165, 250)' : 'rgb(59, 130, 246)',
-                powerDemand: isDark ? 'rgb(248, 113, 113)' : 'rgb(239, 68, 68)'
-            }
-        };
+    const researchFocusData = {
+        labels: ['UK', 'US', 'China', 'Russia', 'Israel', 'Japan', 'Switzerland', 'EU', 'Others'],
+        datasets: [{
+            label: 'Safety & Regulation',
+            data: [9, 7, 6, 5, 4, 8, 9, 8, 5],
+            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+        }, {
+            label: 'Efficiency & Optimisation',
+            data: [6, 8, 9, 8, 5, 4, 6, 7, 7],
+            backgroundColor: 'rgba(255, 159, 64, 0.7)',
+        }, {
+            label: 'New Reactor Design',
+            data: [5, 8, 9, 6, 4, 3, 4, 6, 5],
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+        }, {
+            label: 'Cybersecurity & Resilience',
+            data: [7, 6, 5, 4, 9, 5, 7, 6, 6],
+            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+        }]
     };
-
-    // Research Focus Chart
-    let researchChart;
-    const researchCtx = document.getElementById('researchFocusChart').getContext('2d');
     
-    function createResearchChart() {
-        const colors = getChartColors();
-        const researchFocusData = {
-            labels: ['UK', 'US', 'China', 'Russia', 'Israel', 'Japan', 'Switzerland', 'EU', 'Others'],
-            datasets: [{
-                label: 'Safety & Regulation',
-                data: [9, 7, 6, 5, 4, 8, 9, 8, 5],
-                backgroundColor: colors.datasets.safety,
-            }, {
-                label: 'Efficiency & Optimisation',
-                data: [6, 8, 9, 8, 5, 4, 6, 7, 7],
-                backgroundColor: colors.datasets.efficiency,
-            }, {
-                label: 'New Reactor Design',
-                data: [5, 8, 9, 6, 4, 3, 4, 6, 5],
-                backgroundColor: colors.datasets.newReactor,
-            }, {
-                label: 'Cybersecurity & Resilience',
-                data: [7, 6, 5, 4, 9, 5, 7, 6, 6],
-                backgroundColor: colors.datasets.cybersecurity,
-            }]
-        };
-        
-        researchChart = new Chart(researchCtx, {
-            type: 'bar',
-            data: researchFocusData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    title: { display: false },
-                    legend: {
-                        labels: {
-                            color: colors.textColor
-                        }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `${context.dataset.label}: ${context.raw} (Relative Focus)`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        stacked: true,
-                        grid: {
-                            color: colors.gridColor
-                        },
-                        ticks: {
-                            color: colors.textColor
-                        }
-                    },
-                    y: {
-                        stacked: true,
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Relative Research Focus (Arbitrary Units)',
-                            color: colors.textColor
-                        },
-                        grid: {
-                            color: colors.gridColor
-                        },
-                        ticks: {
-                            color: colors.textColor
+    const researchCtx = document.getElementById('researchFocusChart').getContext('2d');
+    new Chart(researchCtx, {
+        type: 'bar',
+        data: researchFocusData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.raw} (Relative Focus)`;
                         }
                     }
                 }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Relative Research Focus (Arbitrary Units)'
+                    }
+                }
             }
-        });
-    }
-    
-    createResearchChart();
+        }
+    });
 
-    // Reactor Simulation Chart
-    let reactorChart;
     const reactorCtx = document.getElementById('reactorChart').getContext('2d');
+    let reactorChart;
     const timeLabels = Array.from({ length: 60 }, (_, i) => i + 1);
     let powerOutputData = Array(60).fill(50);
     let powerDemandData = Array(60).fill(50);
@@ -688,7 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rodPosition = document.getElementById('rodPosition');
 
     function createReactorChart() {
-        const colors = getChartColors();
         reactorChart = new Chart(reactorCtx, {
             type: 'line',
             data: {
@@ -696,15 +446,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Power Output',
                     data: powerOutputData,
-                    borderColor: colors.datasets.powerOutput,
-                    backgroundColor: colors.datasets.powerOutput + '20',
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true,
                     tension: 0.4,
                     pointRadius: 0,
                 }, {
                     label: 'Power Demand',
                     data: powerDemandData,
-                    borderColor: colors.datasets.powerDemand,
+                    borderColor: 'rgb(239, 68, 68)',
                     borderDash: [5, 5],
                     backgroundColor: 'transparent',
                     fill: false,
@@ -715,38 +465,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 maintainAspectRatio: false,
                 animation: false,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: colors.textColor
-                        }
-                    },
-                    tooltip: { enabled: false }
-                },
                 scales: {
-                    x: {
-                        grid: {
-                            color: colors.gridColor
-                        },
-                        ticks: {
-                            color: colors.textColor
-                        }
-                    },
                     y: {
                         min: 0,
                         max: 120,
                         title: {
                             display: true,
-                            text: 'Power (%)',
-                            color: colors.textColor
-                        },
-                        grid: {
-                            color: colors.gridColor
-                        },
-                        ticks: {
-                            color: colors.textColor
+                            text: 'Power (%)'
                         }
                     }
+                },
+                plugins: {
+                    tooltip: { enabled: false }
                 }
             }
         });
@@ -754,47 +484,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     createReactorChart();
     
-    // Update chart theme function
-    function updateChartTheme() {
-        const colors = getChartColors();
-        
-        // Update research chart
-        if (researchChart) {
-            researchChart.data.datasets[0].backgroundColor = colors.datasets.safety;
-            researchChart.data.datasets[1].backgroundColor = colors.datasets.efficiency;
-            researchChart.data.datasets[2].backgroundColor = colors.datasets.newReactor;
-            researchChart.data.datasets[3].backgroundColor = colors.datasets.cybersecurity;
-            researchChart.options.plugins.legend.labels.color = colors.textColor;
-            researchChart.options.scales.x.grid.color = colors.gridColor;
-            researchChart.options.scales.x.ticks.color = colors.textColor;
-            researchChart.options.scales.y.grid.color = colors.gridColor;
-            researchChart.options.scales.y.ticks.color = colors.textColor;
-            researchChart.options.scales.y.title.color = colors.textColor;
-            researchChart.update();
-        }
-        
-        // Update reactor chart
-        if (reactorChart) {
-            reactorChart.data.datasets[0].borderColor = colors.datasets.powerOutput;
-            reactorChart.data.datasets[0].backgroundColor = colors.datasets.powerOutput + '20';
-            reactorChart.data.datasets[1].borderColor = colors.datasets.powerDemand;
-            reactorChart.options.plugins.legend.labels.color = colors.textColor;
-            reactorChart.options.scales.x.grid.color = colors.gridColor;
-            reactorChart.options.scales.x.ticks.color = colors.textColor;
-            reactorChart.options.scales.y.grid.color = colors.gridColor;
-            reactorChart.options.scales.y.ticks.color = colors.textColor;
-            reactorChart.options.scales.y.title.color = colors.textColor;
-            reactorChart.update();
-        }
-    }
-    
-    // Simulation logic
     let currentPower = 50;
     let currentRodPosition = 50;
     let integralError = 0;
-    const Kp = 0.4;
-    const Ki = 0.02;
-    const Kd = 1.5;
+    const Kp = 0.4; // Proportional gain
+    const Ki = 0.02; // Integral gain
+    const Kd = 1.5; // Derivative gain
     let lastError = 0;
     
     function updateSimulation() {
@@ -810,12 +505,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const controlSignal = Kp * error + Ki * integralError + Kd * derivativeError;
         
-        currentRodPosition -= controlSignal * 0.1;
+        currentRodPosition -= controlSignal * 0.1; // Inverted logic for rods
         currentRodPosition = Math.max(0, Math.min(100, currentRodPosition));
         
         rodPosition.textContent = `${currentRodPosition.toFixed(1)}%`;
         
-        const powerChange = (100 - currentRodPosition - currentPower) * 0.1;
+        const powerChange = (100 - currentRodPosition - currentPower) * 0.1; // Simplified reactor physics
         currentPower += powerChange;
         
         powerOutputData.shift();
