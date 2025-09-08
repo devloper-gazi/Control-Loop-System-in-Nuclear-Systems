@@ -11,59 +11,141 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Neutral Academia -->
-    <!-- Application Structure Plan: A single-page, vertical scrolling layout with a sticky top navigation for smooth scrolling between thematic sections. This structure was chosen to guide the user from high-level concepts (Introduction) to deep technical details (Control Loop, Algorithms) and then to practical application (Interactive Simulation) and global context (Comparative Analysis). This non-linear but guided flow allows both quick overviews and deep dives, enhancing user exploration of a complex topic without overwhelming them. -->
-    <!-- Visualization & Content Choices: 1. Core Concepts -> Inform -> HTML/CSS Diagram -> No interaction -> Simple, dependency-free visualization for the main feedback loop. 2. Control System -> Explore Change -> Chart.js Line Chart -> Sliders for demand/temp adjust chart -> Demonstrates the system's dynamic response, making it tangible. 3. Global Comparison -> Compare -> Chart.js Bar Chart -> Tab clicks update text content -> Provides an immediate visual comparison of national efforts, supporting the textual analysis. All charts are Canvas-based. Technical formulas and pseudo-code are presented in styled HTML pre/code blocks for clarity. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
+        :root {
+            --bg-primary: #f5f5f4;
+            --bg-secondary: #ffffff;
+            --text-primary: #292524;
+            --text-secondary: #57534e;
+            --text-tertiary: #78716c;
+            --border-color: #e7e5e4;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --code-bg: #1f2937;
+            --code-text: #d1d5db;
+            --formula-bg: #e7e5e4;
+            --nav-hover: #0c4a6e;
+            --chart-grid: rgba(0, 0, 0, 0.1);
+            --chart-text: #666;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #f5f5f4;
+            --text-secondary: #a8a29e;
+            --text-tertiary: #78716c;
+            --border-color: #292524;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --code-bg: #0f172a;
+            --code-text: #e2e8f0;
+            --formula-bg: #292524;
+            --nav-hover: #38bdf8;
+            --chart-grid: rgba(255, 255, 255, 0.1);
+            --chart-text: #999;
+        }
+
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f5f5f4;
-            color: #292524;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
         }
+
+        .header-bg {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
         .nav-link {
+            color: var(--text-secondary);
             transition: color 0.3s ease, border-color 0.3s ease;
             border-bottom: 2px solid transparent;
         }
+
         .nav-link:hover, .nav-link.active {
-            color: #0c4a6e;
-            border-bottom-color: #0c4a6e;
+            color: var(--nav-hover);
+            border-bottom-color: var(--nav-hover);
         }
+
         .card {
-            background-color: #ffffff;
+            background-color: var(--bg-secondary);
             border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            box-shadow: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
         }
+
         .code-block {
-            background-color: #1f2937;
-            color: #d1d5db;
+            background-color: var(--code-bg);
+            color: var(--code-text);
             border-radius: 0.5rem;
             padding: 1rem;
             font-family: 'Courier New', Courier, monospace;
             font-size: 0.875rem;
             overflow-x: auto;
         }
+
         .formula {
-            background-color: #e7e5e4;
+            background-color: var(--formula-bg);
             padding: 1rem;
             border-radius: 0.5rem;
             font-family: 'Times New Roman', serif;
             text-align: center;
             font-size: 1.1rem;
-            color: #292524;
+            color: var(--text-primary);
         }
+
         .tab-btn {
+            color: var(--text-secondary);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         .tab-btn.active {
-            background-color: #0c4a6e;
+            background-color: var(--nav-hover);
             color: #ffffff;
         }
+
+        .control-box-light {
+            background-color: #dbeafe;
+            color: #1e3a8a;
+        }
+
+        .control-box-amber {
+            background-color: #fed7aa;
+            color: #92400e;
+        }
+
+        .control-box-emerald {
+            background-color: #a7f3d0;
+            color: #064e3b;
+        }
+
+        [data-theme="dark"] .control-box-light {
+            background-color: #1e3a8a;
+            color: #dbeafe;
+        }
+
+        [data-theme="dark"] .control-box-amber {
+            background-color: #92400e;
+            color: #fed7aa;
+        }
+
+        [data-theme="dark"] .control-box-emerald {
+            background-color: #064e3b;
+            color: #a7f3d0;
+        }
+
+        .border-dashed-box {
+            border: 2px dashed var(--border-color);
+        }
+
         .chart-container {
             position: relative;
             width: 100%;
@@ -73,28 +155,94 @@
             height: 350px;
             max-height: 400px;
         }
+
         @media (min-width: 768px) {
             .chart-container {
                 height: 400px;
             }
         }
+
+        /* Theme toggle button styles */
+        .theme-toggle {
+            width: 48px;
+            height: 24px;
+            background-color: var(--border-color);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background-color: var(--bg-secondary);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background-color: var(--nav-hover);
+        }
+
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(24px);
+        }
+
+        .slider-track {
+            background: linear-gradient(to right, var(--border-color) 0%, var(--nav-hover) 50%, var(--border-color) 100%);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--nav-hover);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--nav-hover);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased" data-theme="light">
 
-    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-md">
+    <header class="header-bg backdrop-blur-lg sticky top-0 z-50">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
-                    <h1 class="text-xl font-bold text-slate-800">The Thorium Age</h1>
+                    <h1 class="text-xl font-bold">The Thorium Age</h1>
                 </div>
-                <div class="hidden md:block">
-                    <div id="nav-links" class="ml-10 flex items-baseline space-x-4">
-                        <a href="#introduction" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Introduction</a>
-                        <a href="#control-loop" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Control Loop</a>
-                        <a href="#simulation" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Simulation</a>
-                        <a href="#reconfiguration" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Reconfiguration</a>
-                        <a href="#global-landscape" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-slate-700">Global Landscape</a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <div id="nav-links" class="flex items-baseline space-x-4">
+                        <a href="#introduction" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Introduction</a>
+                        <a href="#control-loop" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Control Loop</a>
+                        <a href="#simulation" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Simulation</a>
+                        <a href="#reconfiguration" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Reconfiguration</a>
+                        <a href="#global-landscape" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Global Landscape</a>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm">☀️</span>
+                        <div class="theme-toggle" id="themeToggle">
+                            <div class="theme-toggle-slider">
+                                <span id="themeIcon">☀️</span>
+                            </div>
+                        </div>
+                        <span class="text-sm">🌙</span>
                     </div>
                 </div>
             </div>
@@ -105,49 +253,49 @@
 
         <section id="introduction" class="mb-24 scroll-mt-20">
             <div class="text-center mb-12">
-                <h2 class="text-base font-semibold text-sky-800 tracking-wide uppercase">Smart Nuclear Energy</h2>
-                <p class="mt-2 text-4xl font-extrabold text-slate-900 tracking-tight sm:text-5xl">Autonomous System Optimisation</p>
-                <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600">Exploring the machine learning-driven future of nuclear reactor control, enabling dynamic adaptation to energy demands with unprecedented safety and efficiency.</p>
+                <h2 class="text-base font-semibold tracking-wide uppercase" style="color: var(--nav-hover)">Smart Nuclear Energy</h2>
+                <p class="mt-2 text-4xl font-extrabold tracking-tight sm:text-5xl">Autonomous System Optimisation</p>
+                <p class="mt-4 max-w-2xl mx-auto text-xl" style="color: var(--text-secondary)">Exploring the machine learning-driven future of nuclear reactor control, enabling dynamic adaptation to energy demands with unprecedented safety and efficiency.</p>
             </div>
 
             <div class="card p-8">
-                 <p class="text-lg text-slate-700 mb-6">At the heart of next-generation nuclear systems, such as Thorium-based Molten Salt Reactors (MSRs), lies the principle of autonomous operation. This paradigm shift replaces static, human-supervised control with intelligent, self-adjusting systems. Machine learning (ML) algorithms form a continuous feedback loop that optimises reactor performance in real-time. This application provides an overview of the core components, underlying principles, and global research landscape of this transformative technology.</p>
+                <p class="text-lg mb-6" style="color: var(--text-secondary)">At the heart of next-generation nuclear systems, such as Thorium-based Molten Salt Reactors (MSRs), lies the principle of autonomous operation. This paradigm shift replaces static, human-supervised control with intelligent, self-adjusting systems. Machine learning (ML) algorithms form a continuous feedback loop that optimises reactor performance in real-time. This application provides an overview of the core components, underlying principles, and global research landscape of this transformative technology.</p>
                 
-                <h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">The Core Autonomous Control Loop</h3>
+                <h3 class="text-2xl font-bold mb-4 text-center">The Core Autonomous Control Loop</h3>
                 <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 text-center">
-                    <div class="p-4 bg-sky-100 rounded-lg w-full md:w-1/4">
+                    <div class="p-4 control-box-light rounded-lg w-full md:w-1/4">
                         <div class="text-5xl mb-2">📡</div>
-                        <h4 class="font-bold text-sky-900">1. SENSE</h4>
-                        <p class="text-sm text-sky-800">Collect real-time data from thousands of sensors (temperature, pressure, neutron flux, etc.).</p>
+                        <h4 class="font-bold">1. SENSE</h4>
+                        <p class="text-sm">Collect real-time data from thousands of sensors (temperature, pressure, neutron flux, etc.).</p>
                     </div>
-                    <div class="font-bold text-2xl text-slate-500 transform rotate-90 md:rotate-0">→</div>
-                    <div class="p-4 bg-amber-100 rounded-lg w-full md:w-1/4">
+                    <div class="font-bold text-2xl transform rotate-90 md:rotate-0" style="color: var(--text-tertiary)">→</div>
+                    <div class="p-4 control-box-amber rounded-lg w-full md:w-1/4">
                         <div class="text-5xl mb-2">🧠</div>
-                        <h4 class="font-bold text-amber-900">2. DECIDE</h4>
-                        <p class="text-sm text-amber-800">ML models analyse data, predict future states, and determine optimal adjustments.</p>
+                        <h4 class="font-bold">2. DECIDE</h4>
+                        <p class="text-sm">ML models analyse data, predict future states, and determine optimal adjustments.</p>
                     </div>
-                    <div class="font-bold text-2xl text-slate-500 transform rotate-90 md:rotate-0">→</div>
-                    <div class="p-4 bg-emerald-100 rounded-lg w-full md:w-1/4">
+                    <div class="font-bold text-2xl transform rotate-90 md:rotate-0" style="color: var(--text-tertiary)">→</div>
+                    <div class="p-4 control-box-emerald rounded-lg w-full md:w-1/4">
                         <div class="text-5xl mb-2">⚙️</div>
-                        <h4 class="font-bold text-emerald-900">3. ACT</h4>
-                        <p class="text-sm text-emerald-800">Control systems execute decisions (adjust control rods, coolant flow, power distribution).</p>
+                        <h4 class="font-bold">3. ACT</h4>
+                        <p class="text-sm">Control systems execute decisions (adjust control rods, coolant flow, power distribution).</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="control-loop" class="mb-24 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Deep Dive: The ML Control Loop</h2>
-            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">The control loop is not a monolithic entity but a collection of specialised algorithms and physical principles working in concert. Below, we examine the foundational mathematical models and the algorithmic logic that enable autonomous decision-making.</p>
+            <h2 class="text-3xl font-bold mb-8 text-center">Deep Dive: The ML Control Loop</h2>
+            <p class="text-center text-lg max-w-3xl mx-auto mb-12" style="color: var(--text-secondary)">The control loop is not a monolithic entity but a collection of specialised algorithms and physical principles working in concert. Below, we examine the foundational mathematical models and the algorithmic logic that enable autonomous decision-making.</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="card p-6">
-                    <h3 class="text-xl font-bold mb-4 text-slate-800">Core Physics: Point Kinetics Equation</h3>
-                    <p class="mb-4 text-slate-600">The behaviour of neutron population (and thus power) in a reactor can be approximated by the point kinetics equations. This is a foundational model that any control algorithm must respect.</p>
+                    <h3 class="text-xl font-bold mb-4">Core Physics: Point Kinetics Equation</h3>
+                    <p class="mb-4" style="color: var(--text-secondary)">The behaviour of neutron population (and thus power) in a reactor can be approximated by the point kinetics equations. This is a foundational model that any control algorithm must respect.</p>
                     <div class="formula">
                         dP(t)/dt = [ (ρ(t) - β) / Λ ] * P(t) + ΣλᵢCᵢ(t)
                     </div>
-                    <ul class="mt-4 text-sm text-slate-500 space-y-1">
+                    <ul class="mt-4 text-sm space-y-1" style="color: var(--text-tertiary)">
                         <li><b>P(t)</b>: Reactor power at time t</li>
                         <li><b>ρ(t)</b>: Reactivity (control input)</li>
                         <li><b>β</b>: Delayed neutron fraction</li>
@@ -157,8 +305,8 @@
                 </div>
 
                 <div class="card p-6">
-                    <h3 class="text-xl font-bold mb-4 text-slate-800">Algorithm: Predictive Control Model</h3>
-                    <p class="mb-4 text-slate-600">A Model Predictive Control (MPC) algorithm uses a model of the system (like the point kinetics equation) to predict future states and select a control action that minimises a cost function over a time horizon.</p>
+                    <h3 class="text-xl font-bold mb-4">Algorithm: Predictive Control Model</h3>
+                    <p class="mb-4" style="color: var(--text-secondary)">A Model Predictive Control (MPC) algorithm uses a model of the system (like the point kinetics equation) to predict future states and select a control action that minimises a cost function over a time horizon.</p>
                     <div class="code-block">
 <pre>
 function calculate_optimal_control(state, demand):
@@ -186,23 +334,23 @@ function calculate_optimal_control(state, demand):
         </section>
 
         <section id="simulation" class="mb-24 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Interactive Control Simulation</h2>
-            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">This simplified simulation demonstrates how the autonomous system responds to changing energy demands while maintaining operational stability. Adjust the sliders to see the ML controller adapt the reactor's power output and control rod position in real-time. The goal is to match the power output (blue line) to the power demand (red line) smoothly and efficiently.</p>
+            <h2 class="text-3xl font-bold mb-8 text-center">Interactive Control Simulation</h2>
+            <p class="text-center text-lg max-w-3xl mx-auto mb-12" style="color: var(--text-secondary)">This simplified simulation demonstrates how the autonomous system responds to changing energy demands while maintaining operational stability. Adjust the sliders to see the ML controller adapt the reactor's power output and control rod position in real-time. The goal is to match the power output (blue line) to the power demand (red line) smoothly and efficiently.</p>
             
             <div class="card p-8">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div class="text-center">
-                        <label for="powerDemand" class="block text-sm font-medium text-slate-700">Power Demand (%)</label>
-                        <input id="powerDemand" type="range" min="20" max="100" value="50" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
-                        <span id="powerDemandValue" class="text-lg font-bold text-sky-800">50%</span>
+                        <label for="powerDemand" class="block text-sm font-medium" style="color: var(--text-secondary)">Power Demand (%)</label>
+                        <input id="powerDemand" type="range" min="20" max="100" value="50" class="w-full h-2 slider-track rounded-lg appearance-none cursor-pointer">
+                        <span id="powerDemandValue" class="text-lg font-bold" style="color: var(--nav-hover)">50%</span>
                     </div>
                     <div class="text-center">
-                        <div class="block text-sm font-medium text-slate-700">System Stability</div>
+                        <div class="block text-sm font-medium" style="color: var(--text-secondary)">System Stability</div>
                         <div id="stabilityIndicator" class="mt-2 text-lg font-bold text-emerald-600">STABLE</div>
                     </div>
                     <div class="text-center">
-                        <div class="block text-sm font-medium text-slate-700">Control Rod Position</div>
-                        <div id="rodPosition" class="mt-2 text-lg font-bold text-slate-800">50.0%</div>
+                        <div class="block text-sm font-medium" style="color: var(--text-secondary)">Control Rod Position</div>
+                        <div id="rodPosition" class="mt-2 text-lg font-bold">50.0%</div>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -212,37 +360,37 @@ function calculate_optimal_control(state, demand):
         </section>
 
         <section id="reconfiguration" class="mb-24 scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Dynamic Reconfiguration & Updates</h2>
-            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">An autonomous system must also be capable of self-maintenance and improvement. This involves robust protocols for deploying software and firmware updates without compromising safety or operational continuity. The "Digital Twin" concept is paramount to this process.</p>
+            <h2 class="text-3xl font-bold mb-8 text-center">Dynamic Reconfiguration & Updates</h2>
+            <p class="text-center text-lg max-w-3xl mx-auto mb-12" style="color: var(--text-secondary)">An autonomous system must also be capable of self-maintenance and improvement. This involves robust protocols for deploying software and firmware updates without compromising safety or operational continuity. The "Digital Twin" concept is paramount to this process.</p>
             
             <div class="card p-8">
-                <h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">The Digital Twin Validation Protocol</h3>
+                <h3 class="text-2xl font-bold mb-4 text-center">The Digital Twin Validation Protocol</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                     <div class="flex flex-col items-center">
-                        <div class="w-full p-4 border-2 border-dashed border-slate-300 rounded-lg">
+                        <div class="w-full p-4 border-dashed-box rounded-lg">
                             <div class="text-4xl">📦</div>
-                            <h4 class="font-bold text-slate-700 mt-2">1. New Update Package</h4>
-                            <p class="text-sm text-slate-500">A new control algorithm or security patch is developed and packaged.</p>
+                            <h4 class="font-bold mt-2">1. New Update Package</h4>
+                            <p class="text-sm" style="color: var(--text-tertiary)">A new control algorithm or security patch is developed and packaged.</p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center font-bold text-3xl text-slate-400">→</div>
+                    <div class="flex items-center justify-center font-bold text-3xl" style="color: var(--text-tertiary)">→</div>
                     <div class="flex flex-col items-center">
-                        <div class="w-full p-4 border-2 border-dashed border-sky-400 bg-sky-50 rounded-lg">
+                        <div class="w-full p-4 border-dashed-box control-box-light rounded-lg">
                             <div class="text-4xl">🖥️</div>
-                            <h4 class="font-bold text-sky-800 mt-2">2. Digital Twin Simulation</h4>
-                            <p class="text-sm text-sky-700">The update is deployed to a high-fidelity virtual replica of the reactor. It undergoes thousands of simulated operational cycles and fault scenarios.</p>
+                            <h4 class="font-bold mt-2">2. Digital Twin Simulation</h4>
+                            <p class="text-sm">The update is deployed to a high-fidelity virtual replica of the reactor. It undergoes thousands of simulated operational cycles and fault scenarios.</p>
                         </div>
                     </div>
                 </div>
                  <div class="flex justify-center my-4">
-                    <div class="font-bold text-3xl text-slate-400 transform rotate-90">↓</div>
+                    <div class="font-bold text-3xl transform rotate-90" style="color: var(--text-tertiary)">↓</div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 md:grid-cols-offset-2 gap-4 text-center">
                      <div class="flex flex-col items-center md:col-start-2">
-                        <div class="w-full p-4 border-2 border-dashed border-emerald-400 bg-emerald-50 rounded-lg">
+                        <div class="w-full p-4 border-dashed-box control-box-emerald rounded-lg">
                             <div class="text-4xl">💡</div>
-                            <h4 class="font-bold text-emerald-800 mt-2">3. Autonomous Deployment</h4>
-                            <p class="text-sm text-emerald-700">If all simulations pass, the validated update is automatically deployed to the physical reactor during a low-demand period.</p>
+                            <h4 class="font-bold mt-2">3. Autonomous Deployment</h4>
+                            <p class="text-sm">If all simulations pass, the validated update is automatically deployed to the physical reactor during a low-demand period.</p>
                         </div>
                     </div>
                 </div>
@@ -250,28 +398,28 @@ function calculate_optimal_control(state, demand):
         </section>
 
         <section id="global-landscape" class="scroll-mt-20">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Global Landscape & Comparative Analysis</h2>
-            <p class="text-center text-lg text-slate-600 max-w-3xl mx-auto mb-12">Research into autonomous nuclear control is a global endeavour, with different nations focusing on distinct aspects of the technology, driven by national energy policies, research funding, and regulatory environments. This section provides a comparative overview of key players.</p>
+            <h2 class="text-3xl font-bold mb-8 text-center">Global Landscape & Comparative Analysis</h2>
+            <p class="text-center text-lg max-w-3xl mx-auto mb-12" style="color: var(--text-secondary)">Research into autonomous nuclear control is a global endeavour, with different nations focusing on distinct aspects of the technology, driven by national energy policies, research funding, and regulatory environments. This section provides a comparative overview of key players.</p>
             
             <div class="card p-8">
                 <div class="mb-8">
-                    <div id="country-tabs" class="flex flex-wrap justify-center border-b border-slate-200">
-                        <button data-country="uk" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">United Kingdom</button>
-                        <button data-country="us" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">United States</button>
-                        <button data-country="china" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">China</button>
-                        <button data-country="russia" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Russia</button>
-                        <button data-country="israel" class="tab-btn active px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Israel</button>
-                        <button data-country="japan" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Japan</button>
-                        <button data-country="switzerland" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Switzerland</button>
-                        <button data-country="eu" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">European Union</button>
-                        <button data-country="others" class="tab-btn px-4 py-2 text-sm font-medium text-slate-600 rounded-t-lg">Others</button>
+                    <div id="country-tabs" class="flex flex-wrap justify-center" style="border-bottom: 1px solid var(--border-color)">
+                        <button data-country="uk" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">United Kingdom</button>
+                        <button data-country="us" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">United States</button>
+                        <button data-country="china" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">China</button>
+                        <button data-country="russia" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Russia</button>
+                        <button data-country="israel" class="tab-btn active px-4 py-2 text-sm font-medium rounded-t-lg">Israel</button>
+                        <button data-country="japan" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Japan</button>
+                        <button data-country="switzerland" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Switzerland</button>
+                        <button data-country="eu" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">European Union</button>
+                        <button data-country="others" class="tab-btn px-4 py-2 text-sm font-medium rounded-t-lg">Others</button>
                     </div>
                     <div id="country-content" class="mt-6">
                     </div>
                 </div>
 
-                <h3 class="text-xl font-bold text-slate-800 mb-4 text-center">Comparative Research Focus</h3>
-                <p class="text-sm text-slate-600 text-center mb-4">Each bar represents a country, with its total height showing its overall research effort and the segments showing the relative focus on specific areas. Click on the country tabs above for more details.</p>
+                <h3 class="text-xl font-bold mb-4 text-center">Comparative Research Focus</h3>
+                <p class="text-sm text-center mb-4" style="color: var(--text-secondary)">Each bar represents a country, with its total height showing its overall research effort and the segments showing the relative focus on specific areas. Click on the country tabs above for more details.</p>
                 <div class="chart-container">
                     <canvas id="researchFocusChart"></canvas>
                 </div>
@@ -282,6 +430,19 @@ function calculate_optimal_control(state, demand):
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+    // Theme handling
+    let isDarkMode = false;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    themeToggle.addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+        themeIcon.textContent = isDarkMode ? '🌙' : '☀️';
+        updateChartColors();
+    });
 
     const sections = document.querySelectorAll('section');
     const navLinks = document.querySelectorAll('.nav-link');
@@ -355,8 +516,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCountryContent(country) {
         const data = countryData[country];
         countryContent.innerHTML = `
-            <h4 class="text-xl font-bold text-slate-900">${data.title}</h4>
-            <p class="mt-2 text-slate-600">${data.content}</p>
+            <h4 class="text-xl font-bold">${data.title}</h4>
+            <p class="mt-2" style="color: var(--text-secondary)">${data.content}</p>
         `;
         countryTabs.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
@@ -373,62 +534,103 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateCountryContent('israel');
 
-    const researchFocusData = {
-        labels: ['UK', 'US', 'China', 'Russia', 'Israel', 'Japan', 'Switzerland', 'EU', 'Others'],
-        datasets: [{
-            label: 'Safety & Regulation',
-            data: [9, 7, 6, 5, 4, 8, 9, 8, 5],
-            backgroundColor: 'rgba(54, 162, 235, 0.7)',
-        }, {
-            label: 'Efficiency & Optimisation',
-            data: [6, 8, 9, 8, 5, 4, 6, 7, 7],
-            backgroundColor: 'rgba(255, 159, 64, 0.7)',
-        }, {
-            label: 'New Reactor Design',
-            data: [5, 8, 9, 6, 4, 3, 4, 6, 5],
-            backgroundColor: 'rgba(75, 192, 192, 0.7)',
-        }, {
-            label: 'Cybersecurity & Resilience',
-            data: [7, 6, 5, 4, 9, 5, 7, 6, 6],
-            backgroundColor: 'rgba(255, 99, 132, 0.7)',
-        }]
-    };
-    
-    const researchCtx = document.getElementById('researchFocusChart').getContext('2d');
-    new Chart(researchCtx, {
-        type: 'bar',
-        data: researchFocusData,
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                title: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.dataset.label}: ${context.raw} (Relative Focus)`;
+    // Chart configurations
+    let researchChart;
+    let reactorChart;
+
+    function getChartColors() {
+        const isCurrentlyDark = body.getAttribute('data-theme') === 'dark';
+        return {
+            gridColor: isCurrentlyDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+            textColor: isCurrentlyDark ? '#999' : '#666',
+            legendColor: isCurrentlyDark ? '#f5f5f4' : '#292524',
+            datasets: {
+                safety: isCurrentlyDark ? 'rgba(96, 165, 250, 0.8)' : 'rgba(54, 162, 235, 0.7)',
+                efficiency: isCurrentlyDark ? 'rgba(251, 191, 36, 0.8)' : 'rgba(255, 159, 64, 0.7)',
+                design: isCurrentlyDark ? 'rgba(52, 211, 153, 0.8)' : 'rgba(75, 192, 192, 0.7)',
+                cyber: isCurrentlyDark ? 'rgba(248, 113, 113, 0.8)' : 'rgba(255, 99, 132, 0.7)',
+                powerOutput: isCurrentlyDark ? 'rgb(96, 165, 250)' : 'rgb(59, 130, 246)',
+                powerDemand: isCurrentlyDark ? 'rgb(248, 113, 113)' : 'rgb(239, 68, 68)'
+            }
+        };
+    }
+
+    function createResearchChart() {
+        const colors = getChartColors();
+        const researchFocusData = {
+            labels: ['UK', 'US', 'China', 'Russia', 'Israel', 'Japan', 'Switzerland', 'EU', 'Others'],
+            datasets: [{
+                label: 'Safety & Regulation',
+                data: [9, 7, 6, 5, 4, 8, 9, 8, 5],
+                backgroundColor: colors.datasets.safety,
+            }, {
+                label: 'Efficiency & Optimisation',
+                data: [6, 8, 9, 8, 5, 4, 6, 7, 7],
+                backgroundColor: colors.datasets.efficiency,
+            }, {
+                label: 'New Reactor Design',
+                data: [5, 8, 9, 6, 4, 3, 4, 6, 5],
+                backgroundColor: colors.datasets.design,
+            }, {
+                label: 'Cybersecurity & Resilience',
+                data: [7, 6, 5, 4, 9, 5, 7, 6, 6],
+                backgroundColor: colors.datasets.cyber,
+            }]
+        };
+        
+        const researchCtx = document.getElementById('researchFocusChart').getContext('2d');
+        researchChart = new Chart(researchCtx, {
+            type: 'bar',
+            data: researchFocusData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: false },
+                    legend: {
+                        labels: {
+                            color: colors.legendColor
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${context.raw} (Relative Focus)`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        grid: {
+                            color: colors.gridColor
+                        },
+                        ticks: {
+                            color: colors.textColor
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        grid: {
+                            color: colors.gridColor
+                        },
+                        ticks: {
+                            color: colors.textColor
+                        },
+                        title: {
+                            display: true,
+                            text: 'Relative Research Focus (Arbitrary Units)',
+                            color: colors.textColor
                         }
                     }
                 }
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Relative Research Focus (Arbitrary Units)'
-                    }
-                }
             }
-        }
-    });
+        });
+    }
 
     const reactorCtx = document.getElementById('reactorChart').getContext('2d');
-    let reactorChart;
     const timeLabels = Array.from({ length: 60 }, (_, i) => i + 1);
     let powerOutputData = Array(60).fill(50);
     let powerDemandData = Array(60).fill(50);
@@ -439,6 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rodPosition = document.getElementById('rodPosition');
 
     function createReactorChart() {
+        const colors = getChartColors();
         reactorChart = new Chart(reactorCtx, {
             type: 'line',
             data: {
@@ -446,15 +649,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: 'Power Output',
                     data: powerOutputData,
-                    borderColor: 'rgb(59, 130, 246)',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: colors.datasets.powerOutput,
+                    backgroundColor: isDarkMode ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.1)',
                     fill: true,
                     tension: 0.4,
                     pointRadius: 0,
                 }, {
                     label: 'Power Demand',
                     data: powerDemandData,
-                    borderColor: 'rgb(239, 68, 68)',
+                    borderColor: colors.datasets.powerDemand,
                     borderDash: [5, 5],
                     backgroundColor: 'transparent',
                     fill: false,
@@ -466,30 +669,82 @@ document.addEventListener('DOMContentLoaded', () => {
                 maintainAspectRatio: false,
                 animation: false,
                 scales: {
+                    x: {
+                        grid: {
+                            color: colors.gridColor
+                        },
+                        ticks: {
+                            color: colors.textColor
+                        }
+                    },
                     y: {
                         min: 0,
                         max: 120,
+                        grid: {
+                            color: colors.gridColor
+                        },
+                        ticks: {
+                            color: colors.textColor
+                        },
                         title: {
                             display: true,
-                            text: 'Power (%)'
+                            text: 'Power (%)',
+                            color: colors.textColor
                         }
                     }
                 },
                 plugins: {
+                    legend: {
+                        labels: {
+                            color: colors.legendColor
+                        }
+                    },
                     tooltip: { enabled: false }
                 }
             }
         });
     }
+
+    function updateChartColors() {
+        if (researchChart) {
+            const colors = getChartColors();
+            researchChart.options.plugins.legend.labels.color = colors.legendColor;
+            researchChart.options.scales.x.grid.color = colors.gridColor;
+            researchChart.options.scales.x.ticks.color = colors.textColor;
+            researchChart.options.scales.y.grid.color = colors.gridColor;
+            researchChart.options.scales.y.ticks.color = colors.textColor;
+            researchChart.options.scales.y.title.color = colors.textColor;
+            researchChart.data.datasets[0].backgroundColor = colors.datasets.safety;
+            researchChart.data.datasets[1].backgroundColor = colors.datasets.efficiency;
+            researchChart.data.datasets[2].backgroundColor = colors.datasets.design;
+            researchChart.data.datasets[3].backgroundColor = colors.datasets.cyber;
+            researchChart.update();
+        }
+
+        if (reactorChart) {
+            const colors = getChartColors();
+            reactorChart.options.plugins.legend.labels.color = colors.legendColor;
+            reactorChart.options.scales.x.grid.color = colors.gridColor;
+            reactorChart.options.scales.x.ticks.color = colors.textColor;
+            reactorChart.options.scales.y.grid.color = colors.gridColor;
+            reactorChart.options.scales.y.ticks.color = colors.textColor;
+            reactorChart.options.scales.y.title.color = colors.textColor;
+            reactorChart.data.datasets[0].borderColor = colors.datasets.powerOutput;
+            reactorChart.data.datasets[0].backgroundColor = isDarkMode ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.1)';
+            reactorChart.data.datasets[1].borderColor = colors.datasets.powerDemand;
+            reactorChart.update();
+        }
+    }
     
+    createResearchChart();
     createReactorChart();
     
     let currentPower = 50;
     let currentRodPosition = 50;
     let integralError = 0;
-    const Kp = 0.4; // Proportional gain
-    const Ki = 0.02; // Integral gain
-    const Kd = 1.5; // Derivative gain
+    const Kp = 0.4;
+    const Ki = 0.02;
+    const Kd = 1.5;
     let lastError = 0;
     
     function updateSimulation() {
@@ -505,12 +760,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const controlSignal = Kp * error + Ki * integralError + Kd * derivativeError;
         
-        currentRodPosition -= controlSignal * 0.1; // Inverted logic for rods
+        currentRodPosition -= controlSignal * 0.1;
         currentRodPosition = Math.max(0, Math.min(100, currentRodPosition));
         
         rodPosition.textContent = `${currentRodPosition.toFixed(1)}%`;
         
-        const powerChange = (100 - currentRodPosition - currentPower) * 0.1; // Simplified reactor physics
+        const powerChange = (100 - currentRodPosition - currentPower) * 0.1;
         currentPower += powerChange;
         
         powerOutputData.shift();
